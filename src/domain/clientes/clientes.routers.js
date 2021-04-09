@@ -1,28 +1,32 @@
 module.exports = class ClientesRouter {
 
-    static init(app) {
+    static init(app,clientesService) {
 
         app.get('/clientes', (req, res) => {
-            res.status(500).send('Falta implementação')
+            let clientes = clientesService.findAll()
+            res.status(200).json(clientes)
         });
 
         app.get('/clientes/:username', (req, res) => {
-            res.status(500).send('Falta implementação')
-            //res.send(req.params.username)
+            let cliente = clientesService.findByUserName(req.params.username)
+            res.status(200).json(cliente)
         });
 
         app.post('/clientes', (req, res) => {
-            //console.log(req.body)
-            res.status(500).send('Falta implementação')
+            let cliente = clientesService.create(req.body)
+            res.status(200).json(cliente)
         });
 
         app.put('/clientes/:username', (req,res) => {
-            console.log(req.body)
-            res.send(req.params.username)
+            let username = req.params.username;
+            let data = req.body;
+            let cliente = clientesService.update(username,data);
+            res.status(200).json(cliente);
         });
 
         app.delete('/clientes/:username', (req,res) => {
-          res.send(req.params.username)
+          let cliente = clientesService.delete(req.params.username)
+          res.status(200).json(cliente)
         });
         
 
