@@ -1,23 +1,31 @@
 module.exports = class EquipamentosRouter {
-    static init (app) {
+    static init (app,equipamentosServices) {
+        
         app.get('/equipamentos', (req,res) =>{
-            res.status(500).send('Falta implementação')
+            const equipamentos = equipamentosServices.findAll()
+            res.status(200).json(equipamentos)
         });
 
         app.get('/equipamentos/:shortname', (req,res) =>{
-            res.status(500).send('Falta implementação')
+            const equipamento = equipamentosServices.findByShortName(req.params.shortname)
+            res.status(200).json(equipamento)
         });       
          
         app.post('/equipamentos', (req,res) =>{
-            res.status(500).send('Falta implementação')
+            const equipamento = equipamentosServices.create(req.body)
+            res.status(200).json(equipamento)
         });
 
         app.put('/equipamentos/:shortname', (req,res) =>{
-            res.status(500).send('Falta implementação')
+            const shortname = req.params.shortname;
+            const data =  req.body;
+            const equipamento = equipamentosServices.update(shortname,data)
+            res.status(200).json(equipamento)
         });
 
         app.delete('/equipamentos/:shortname', (req,res) => {
-            res.status(500).send('Falta implementação')
+            const equipamento = equipamentosServices.delete(req.params.shortname)
+            res.status(200).json(equipamento)
         })
     }
 }
