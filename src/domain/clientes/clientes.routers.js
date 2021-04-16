@@ -3,11 +3,13 @@ module.exports = class ClientesRouter {
     static init(app, clientesService) {
 
         app.get('/clientes', async (req, res) => {
+            console.log('Listando clientes')
             let clientes = await clientesService.findAll()
             res.status(200).json(clientes)
         });
 
         app.get('/clientes/:username', async (req, res) => {
+            console.log('Buscando cliente pelo nome')
             let cliente = await clientesService.findByUserName(req.params.username)
 
             res.status(200).json(cliente)
