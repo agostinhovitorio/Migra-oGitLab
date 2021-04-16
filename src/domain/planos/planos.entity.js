@@ -1,28 +1,48 @@
 module.exports = class PlanosEntity {
-    banco = []
+    dbEntity;
+
+    constructor(dbEntity) {
+        this.dbEntity = dbEntity;
+    }
+
     findAll() {
-        return this.banco;
+        return new Promise((resolve,reject) => {
+            this.dbEntity.query('select groupname from radgroupcheck', function(error, results,fields){
+                resolve(results);
+            });
+        });        
     }
     
     findByGroupName(groupname) {
-        return this.banco.find(item => item.groupname == groupname)
+        return new Promise((resolve,reject) => {
+            this.dbEntity.query('select * from radgroupreply where groupname = ?',[groupname], function(error, results,fields){
+                resolve(results);
+            });
+        });    
     }
 
     create(data) {
-        this.banco.push(data)
-        return data;
+        data.forEach(element => {
+            this.dbEntity.query('insert into radgroupreply set ?', element, (error, results, fields) => {
+
+            });
+        });
+        return Promise.resolve("ok");
     }
 
     update(groupname,data){
-        const itemIndex = this.banco.findIndex(item => item.groupname == groupname)
-        this.banco[itemIndex] = { ...this.banco[itemIndex],...data}
-        return this.banco[itemIndex];
+        return new Promise((resolve, reject) => {
+            this.dbEntity.query('update radgroupreply set value = ? where groupname = ? and attribute = ?', [data.value,groupname,data.attribute], (error, results, fields) => {
+                resolve(results)
+            });
+        })
     }
 
     delete(groupname){
-        let deleted = this.banco.filter(item => item.groupname != groupname)
-        this.banco = deleted;
-        return this.banco;
+        return new Promise((resolve,reject) => {
+            this.dbEntity.query('delete from radgroupreply where groupname = ?',[groupname],(error, results, fields) => {
+             resolve(results)
+            })
+        })
     }
-    
-}
+}    

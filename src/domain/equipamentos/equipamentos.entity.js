@@ -1,29 +1,53 @@
 module.exports = class EquipamentosEntity {
-    banco = []
+    dbEntity;
+
+    constructor(dbEntity) {
+        this.dbEntity = dbEntity;
+    }
 
     findAll() {
-        return this.banco;
+        return new Promise((resolve, reject) => {
+            this.dbEntity.query('select nasname from nas', function (error, results, fields) {
+                if (error) reject(error)
+                resolve(results);
+            });
+        });
     }
 
     findByShortName(shortname) {
-         return this.banco.find(item => item.shortname == shortname)
+        return new Promise((resolve, reject) => {
+            this.dbEntity.query('select * from nas where shortname = ?', [shortname], function (error, results, fields) {
+                if (error) reject(error)
+                resolve(results);
+            });
+        });
     }
 
     create(data) {
-        this.banco.push(data)
-        return data;
+        return new Promise((resolve, reject) => {
+            this.dbEntity.query('insert into nas set ?', data, (error, results, fields) => {
+                if (error) reject(error)
+                resolve(results);
+            });
+        });
+
     }
 
-    update(shortname,data) {
-        const itemIndex = this.banco.findIndex(item => item.shortname == shortname)
-        this.banco[itemIndex] = { ...this.banco[itemIndex],...data}
-        return this.banco[itemIndex];
+    update(shortname, data) {
+        return new Promise((resolve, reject) => {
+            this.dbEntity.query('update nas set nasname = ? where shortname = ?', [data.nasname,shortname], (error, results, fields) => {
+                if (error) reject(error)
+                resolve(results)
+            });
+        })
     }
-    
+
     delete(shortname) {
-        let deleted = this.banco.filter(item => item.shortname != shortname)
-        this.banco = deleted;
-        return this.banco;
-    } 
-    
-}
+        return new Promise((resolve,reject) => {
+            this.dbEntity.query('delete from nas where shortname = ?',[shortname],(error, results, fields) => {
+                if (error) reject(error)
+             resolve(results)
+            })
+        })
+    }
+}    

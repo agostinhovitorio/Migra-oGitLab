@@ -1,27 +1,36 @@
-module.exports = class EquipamentosServices {
+const ClientSSH = require('../../util/clientSSH.util');
+
+module.exports = class EquipamentosServices { //Esse objeto deve servir para gerenciar os outros objetos, encarregando cada um no seu devido propósito.
    
     constructor(equipamentosEntity) {
         this.equipamentosEntity = equipamentosEntity
+        this.ssh = new ClientSSH();
     }
 
-    findAll() {
-        return this.equipamentosEntity.findAll()
+    async findAll() {
+        return await this.equipamentosEntity.findAll()
     }
 
-    findByShortName(shortname) {
-        return this.equipamentosEntity.findByShortName(shortname) 
+    async findByShortName(shortname) {
+        return await this.equipamentosEntity.findByShortName(shortname) 
     }
 
-    create(data) {
-        return this.equipamentosEntity.create(data)
+    async create(data) {
+        let nasCreated = await this.equipamentosEntity.create(data);
+        this.ssh.restartFreeradiusService();
+        return nasCreated
         
     }
 
-    update(shortname,data) {
-        return this.equipamentosEntity.update(shortname,data)
+    async update(shortname,data) {
+        let nasUpdated = await this.equipamentosEntity.update(shortname,data);
+        this.ssh.restartFreeradiusService();
+        return nasUpdated
     }
 
-    delete(shortname) {
-        return this.equipamentosEntity.delete(shortname)
+    async delete(shortname) {
+        let nasDeleted = await this.equipamentosEntity.delete(shortname)
+        this.ssh.restartFreeradiusService();
+        return nasDeleted
     }
 }

@@ -1,34 +1,74 @@
 module.exports = class ClientesRouter {
 
-    static init(app,clientesService) {
+    static init(app, clientesService) {
 
-        app.get('/clientes', (req, res) => {
-            let clientes = clientesService.findAll()
+        app.get('/clientes', async (req, res) => {
+            let clientes = await clientesService.findAll()
             res.status(200).json(clientes)
         });
 
-        app.get('/clientes/:username', (req, res) => {
-            let cliente = clientesService.findByUserName(req.params.username)
+        app.get('/clientes/:username', async (req, res) => {
+            let cliente = await clientesService.findByUserName(req.params.username)
+
             res.status(200).json(cliente)
         });
 
-        app.post('/clientes', (req, res) => {
-            let cliente = clientesService.create(req.body)
+        app.post('/clientes', async (req, res) => {
+            let cliente = await clientesService.create(req.body)
             res.status(200).json(cliente)
         });
 
-        app.put('/clientes/:username', (req,res) => {
+        app.post('/clientes/planos', async (req, res) => {
+            let clientePlan = await clientesService.createClientPlan(req.body)
+            res.status(200).json(clientePlan)
+        })
+
+        app.put('/clientes/:username', async (req, res) => {
             let username = req.params.username;
             let data = req.body;
-            let cliente = clientesService.update(username,data);
+            let cliente = await clientesService.update(username, data);
             res.status(200).json(cliente);
         });
 
-        app.delete('/clientes/:username', (req,res) => {
-          let cliente = clientesService.delete(req.params.username)
-          res.status(200).json(cliente)
+        app.put('/clientes/:username/planos', async (req, res) => {
+            let username = req.params.username;
+            let data = req.body;
+            let cliente = await clientesService.updateClientPlan(username, data);
+            res.status(200).json(cliente);
         });
-        
+
+        app.put('/clientes/banda/:username', async (req,res) => {
+            let username = req.params.username;
+            let banda = req.body.banda;
+            
+            try {
+                let cliente = await clientesService.changeBandWith(username,banda);
+                res.status(200).json(cliente);
+            }catch(err){
+                res.status(400).send(err);     
+            }
+            
+        })
+
+        app.delete('/clientes/:username', async (req, res) => {
+            let cliente = await clientesService.delete(req.params.username)
+            res.status(200).json(cliente)
+        });
+
+        app.delete('/clientes/:username/planos', async (req, res) => {
+            let cliente = await clientesService.deleteClientPlan(req.params.username)
+            res.status(200).json(cliente)
+        });
+
+        app.get('/clientes/:username/extrato', async (req,res) => {
+            let extrato = await clientesService.clientNavigationExtract(req.params.username)
+            res.status(200).json(extrato)
+        });
+
+        app.get('/clientes/:username/extrato/ativo', async (req,res) => {
+            let estrato = await clientesService.clientNavigationExtractActive(req.params.username)
+            res.status(200).json(estrato)
+        });
 
     }
 }

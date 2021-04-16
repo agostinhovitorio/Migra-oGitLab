@@ -3,24 +3,23 @@ module.exports = class PlanosServices {
         this.planosEntity = planosEntity
     }
 
-    findAll() {
-        return this.planosEntity.findAll()
-
+    async findAll() {
+        return await this.planosEntity.findAll();
     }
 
-    findByGroupName(groupname) {
-        return this.planosEntity.findByGroupName(groupname)
+    async findByGroupName(groupname) {
+        return await this.planosEntity.findByGroupName(groupname)
     }
 
-    create(data) {
-        return this.planosEntity.create(data)
+    async create(data) {
+        return await this.planosEntity.create(data)
     }
 
-    update(groupname,data) {
-        return this.planosEntity.update(groupname,data)
+    async update(groupname,data) {
+        return await this.planosEntity.update(groupname,data)
     }
 
-    delete(groupname) {
-        return this.planosEntity.delete(groupname)
+    async delete(groupname) {
+        return await this.planosEntity.delete(groupname)
     }
 }

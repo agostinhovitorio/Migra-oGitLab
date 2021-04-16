@@ -1,27 +1,28 @@
 module.exports = class PlanosRouters {
     static init(app, planosServices) {
-        app.get('/planos', (req,res) =>{
-            let planos = planosServices.findAll()
+        app.get('/planos', async (req,res) =>{
+            let planos = await planosServices.findAll()
             res.status(200).json(planos)  
         });
 
-        app.get('/planos/:groupname', (req,res) =>{
-            let plano = planosServices.findByGroupName(req.params.name)
+        app.get('/planos/:groupname', async (req,res) =>{
+            let plano = await planosServices.findByGroupName(req.params.groupname)
             res.status(200).json(plano)
         });
 
-        app.post('/planos', (req,res) =>{
-            let plano = planosServices.create(req.body)
+        app.post('/planos', async (req,res) =>{
+            let plano = await planosServices.create(req.body)
             res.status(200).json(plano)
         });
 
-        app.put('/planos/:groupname', (req,res) =>{
-            let plano = planosServices.update(req.params.groupname,req.body)
+        app.put('/planos/:groupname', async (req,res) =>{
+            let plano = await planosServices.update(req.params.groupname,req.body)
             res.status(200).json(plano)
         });
+        
 
-        app.delete('/planos/:groupname', (req,res) =>{
-            let plano = planosServices.delete(req.params.groupname)
+        app.delete('/planos/:groupname', async (req,res) =>{
+            let plano = await planosServices.delete(req.params.groupname)
             res.status(200).json(plano)
         });
     }
